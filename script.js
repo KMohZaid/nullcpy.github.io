@@ -146,6 +146,8 @@ function initDOM() {
   DOM.appliedPatchesMeta = document.getElementById("appliedPatchesMeta");
   DOM.appliedPatchesBody = document.getElementById("appliedPatchesBody");
   DOM.patchSearchInput = document.getElementById("patchSearchInput");
+  DOM.patchSearchWrap = DOM.patchSearchInput?.closest(".patch-search-input-wrap");
+  DOM.patchSearchClearBtn = document.getElementById("patchSearchClearBtn");
   DOM.patchCountBadge = document.getElementById("patchCountBadge");
   DOM.obtainiumModal = document.getElementById("obtainiumModal");
   DOM.obtainiumTitle = document.getElementById("obtainiumTitle");
@@ -502,8 +504,21 @@ function setupEventListeners() {
 
   if (DOM.patchSearchInput) {
     DOM.patchSearchInput.addEventListener("input", (e) => {
+      syncPatchClearBtn();
       filterAppliedPatchesList(e.target.value);
     });
+  }
+
+  if (DOM.patchSearchClearBtn && DOM.patchSearchInput) {
+    const handlePatchClear = (e) => {
+      e.preventDefault();
+      if (DOM.patchSearchInput.value === "") return;
+      DOM.patchSearchInput.value = "";
+      syncPatchClearBtn();
+      filterAppliedPatchesList("");
+    };
+    DOM.patchSearchClearBtn.addEventListener("pointerdown", handlePatchClear);
+    DOM.patchSearchClearBtn.addEventListener("click", handlePatchClear);
   }
 
   // Obtainium Modal
@@ -1648,6 +1663,7 @@ function openAppliedPatchesModal(appKey, brandKey, buildId, variant = null, subV
 
   if (DOM.patchSearchInput) {
     DOM.patchSearchInput.value = "";
+    syncPatchClearBtn();
   }
 }
 
@@ -1691,12 +1707,19 @@ function getBuildPatchSources(build) {
   return _resolveSetRef(build.patchSourceRef, cachedPatchSourceSets, build.patchSources);
 }
 
+// Toggle the patch-filter clear button based on the input's content
+function syncPatchClearBtn() {
+  if (DOM.patchSearchWrap && DOM.patchSearchInput) {
+    DOM.patchSearchWrap.classList.toggle("has-value", DOM.patchSearchInput.value.length > 0);
+  }
+}
+
 function filterAppliedPatchesList(query) {
   if (!DOM.appliedPatchesBody) return;
 
   if (!activeAppliedPatchesList) {
     if (DOM.patchCountBadge) {
-      DOM.patchCountBadge.textContent = "0 patches";
+      DOM.patchCountBadge.textContent = "0";
     }
     DOM.appliedPatchesBody.innerHTML = '<div class="no-results" style="padding: 36px 20px; text-align: center; color: var(--text-muted);">No applied patches data available for this build.</div>';
     return;
@@ -1708,7 +1731,7 @@ function filterAppliedPatchesList(query) {
   );
 
   if (DOM.patchCountBadge) {
-    DOM.patchCountBadge.textContent = `${filtered.length} of ${activeAppliedPatchesList.length} patches`;
+    DOM.patchCountBadge.textContent = `${filtered.length}`;
   }
 
   if (filtered.length === 0) {
