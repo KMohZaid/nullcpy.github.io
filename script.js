@@ -114,6 +114,10 @@ const SORT_OPTIONS = [
   { value: "name", label: "Name", icon: SORT_ICONS.name },
 ];
 
+// Shared "external link" arrow used on link buttons (dropdown items, patch links)
+const EXTERNAL_LINK_ARROW =
+  '<svg class="patch-link-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>';
+
 // Cached DOM references
 const DOM = {};
 
@@ -1086,7 +1090,7 @@ function getNoticeInlineStyles(notice) {
 
 function createNoticeMarkup(notice) {
   const linksMarkup = (notice.links || [])
-    .map((link) => `<a href="${link.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)} ↗</a>`)
+    .map((link) => `<a href="${link.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)}${EXTERNAL_LINK_ARROW}</a>`)
     .join(" ");
 
   const styleAttr = getNoticeInlineStyles(notice);
@@ -1649,7 +1653,7 @@ function openAppliedPatchesModal(appKey, brandKey, buildId, variant = null, subV
     const badgesHtml = patchNamesList.map((name, index) => {
       const url = changelogList[index] || (changelogList.length === 1 ? changelogList[0] : null);
       if (url) {
-        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="patch-engine-badge patch-engine-link" title="Open changelog for ${escapeHtml(name)}">${escapeHtml(name)}<svg class="patch-link-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>`;
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="patch-engine-badge patch-engine-link" title="Open changelog for ${escapeHtml(name)}">${escapeHtml(name)}${EXTERNAL_LINK_ARROW}</a>`;
       }
       return `<span class="patch-engine-badge">${escapeHtml(name)}</span>`;
     }).join("");

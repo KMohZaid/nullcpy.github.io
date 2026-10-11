@@ -762,6 +762,7 @@ main {
 .app-notice-links a {
     display: inline-flex;
     align-items: center;
+    gap: 4px;
     padding: 3px 10px;
     border-radius: var(--radius-full);
     text-decoration: none;
