@@ -7,7 +7,7 @@ Fast, clean catalog for the latest patched (ReVanced, Revanced Extended, MorpheA
 ## 🔗 Links
 
 - 🌐 [Website](https://nullcpy.github.io/)
-- 💬 [Telegram Group](https://t.me/open_sauce)
+- 💬 [Telegram Group](https://t.me/nullstoretg)
 - 📣 [Telegram Channel](https://t.me/nullstore_updates)
 - 🐞 [Report an issue](https://github.com/nullcpy/rvb/issues/new/choose)
 

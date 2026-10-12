@@ -75,8 +75,8 @@ const CONFIG = {
   // Header dropdown menus (GitHub / Donate / Social)
   "links": {
     "github": [
-      { "label": "Builder repo", "url": "https://github.com/nullcpy/rvb" },
-      { "label": "Website repo", "url": "https://github.com/nullcpy/nullcpy.github.io" },
+      { "label": "Builder Repo", "url": "https://github.com/nullcpy/rvb" },
+      { "label": "Website Repo", "url": "https://github.com/nullcpy/nullcpy.github.io" },
       { "label": "Report an issue", "url": "https://github.com/nullcpy/rvb/issues/new/choose" }
     ],
     "donate": [
@@ -85,8 +85,8 @@ const CONFIG = {
       { "label": "Pathao Pay", "url": "https://pathaopay.me/@fahim.ahmed" }
     ],
     "telegram": [
-      { "label": "Telegram group", "url": "https://t.me/open_sauce" },
-      { "label": "Telegram channel", "url": "https://t.me/nullstore_updates" }
+      { "label": "Telegram Group", "url": "https://t.me/nullstoretg" },
+      { "label": "Telegram Channel", "url": "https://t.me/nullstore_updates" }
     ],
     "theme": [
       { "label": "System", "action": "system" },
