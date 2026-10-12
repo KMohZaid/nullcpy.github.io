@@ -86,9 +86,7 @@ const CONFIG = {
     ],
     "telegram": [
       { "label": "Telegram group", "url": "https://t.me/open_sauce" },
-      { "label": "Telegram channel", "url": "https://t.me/nullstore_updates" },
-      { "label": "WhatsApp group", "url": "https://chat.whatsapp.com/JF5lDymMxB4BpuEN77w54y" },
-      { "label": "Signal group", "url": "https://signal.group/#CjQKILNEmjszgWGXNBiZwTtdOTJikU534DIR90NZAoCePX6fEhBsFkkMyq5a4m2E6iSZqt5O" }
+      { "label": "Telegram channel", "url": "https://t.me/nullstore_updates" }
     ],
     "theme": [
       { "label": "System", "action": "system" },
