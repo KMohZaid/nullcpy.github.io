@@ -51,6 +51,35 @@ jobs:
           attempt_limit: 3
           attempt_delay: 10000 # Wait 10 seconds between retries
 
+      - name: Notify fork mirror
+        # Vercel builds from the fahim-ahmed05/nullstore fork, which copies this
+        # repo's site files and lets its own push trigger the deploy. A Vercel
+        # Deployment Hook is the wrong tool here: a hook rebuilds the FORK's
+        # committed state, which is still unchanged until the fork pulls. Content
+        # has to move first, so this is a git nudge rather than a Vercel call.
+        # No client_payload needed -- the fork always syncs to upstream main's tip.
+        # Best-effort by design: without FORK_SYNC_TOKEN, or if the fork is
+        # unreachable, the mirror still refreshes on its own 30-minute schedule, so
+        # a nudge failure must never fail a Pages deploy that succeeded.
+        # Covers catalog rebuilds too, because rebuild-catalog.yml dispatches this.
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ secrets.FORK_SYNC_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::notice::FORK_SYNC_TOKEN not set; the fork will sync on its own schedule."
+            exit 0
+          fi
+          for attempt in 1 2 3; do
+            if gh api -X POST repos/fahim-ahmed05/nullstore/dispatches -f event_type=upstream-catalog; then
+              echo "Dispatched upstream-catalog to the fork mirror."
+              exit 0
+            fi
+            echo "Dispatch attempt $attempt failed; retrying..."
+            sleep 5
+          done
+          echo "::warning::Could not reach the fork mirror after 3 attempts; it still syncs on its own schedule."
+
       - name: Remove older workflow runs
         if: always()
         continue-on-error: true
