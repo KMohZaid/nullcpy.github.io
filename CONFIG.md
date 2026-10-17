@@ -7,7 +7,7 @@ This document details the configuration, data schema, styling, and synchronizati
 ## 1. Architecture Overview
 
 - **Stack**: Pure Vanilla HTML5, CSS3, and modern ECMAScript (zero runtime frameworks or bundled bloat).
-- **Hosting**: GitHub Pages (`https://nullcpy.github.io/`).
+- **Hosting**: GitHub Pages (`https://nullcpy.github.io/`) — canonical. An outage **mirror** runs on Vercel (`https://nullstore.vercel.app`) from the fork [`fahim-ahmed05/nullstore`](https://github.com/fahim-ahmed05/nullstore), not from this repo; Pages stays the shareable URL and the mirror is `noindex`d so it never competes on search.
 - **Data Source**: Static [`data.json`](./data.json) file serialized under **Schema v2**.
 - **Decoupled Design**: The build pipeline in [`nullcpy/rvb`](https://github.com/nullcpy/rvb) pushes catalog updates over GitHub API. The website operates entirely as an independent client.
 
@@ -251,3 +251,9 @@ Unmatched apps return `Infinity` and are filtered out instantly.
   - It runs via [`rebuild-catalog.yml`](.github/workflows/rebuild-catalog.yml) on `repository_dispatch` (from rvb releases), the ~6-hourly schedule safety-net, or manual `workflow_dispatch`, then self-dispatches a Pages deploy.
 - **rvb is an input source only**:
   - `nullcpy/rvb` does **not** write or patch `data.json`. `rebuild_catalog.py` reads it through the GitHub API — each release's `build.json` manifest plus the releases/assets listings — and derives every field locally.
+- **Vercel mirror (outage fallback) lives in a fork, not in this repo**:
+  - [`fahim-ahmed05/nullstore`](https://github.com/fahim-ahmed05/nullstore) → Vercel project `nullstore` → **`https://nullstore.vercel.app`**. Nothing here deploys to Vercel.
+  - The fork's `sync-upstream.yml` fetches this repo's `main` anonymously (it is public), copies the five published site files (`index.html`, `style.css`, `script.js`, `data.json`, `social-preview.svg`), and — only if something changed — pushes a fresh commit whose message **deliberately omits `[skip ci]`**. Vercel honours that token, so inheriting upstream's message would push the files and silently skip the deploy. That push is what Vercel's Git integration builds.
+  - **A Vercel Deployment Hook cannot work here.** A hook rebuilds the *fork's* committed state, which is still unchanged until the fork pulls — it would just redeploy the same catalog. Content movement is the sync, not a Vercel call.
+  - [`deploy-pages.yml`](.github/workflows/deploy-pages.yml) sends a best-effort `repository_dispatch` (`upstream-catalog`) to the fork after every Pages deploy, so a rebuild reaches the mirror immediately instead of waiting for the fork's 30-minute cron. It needs the `FORK_SYNC_TOKEN` secret and **skips cleanly when unset**. It lives in `deploy-pages.yml` because that workflow is already the single funnel for both site-file pushes and catalog-rebuild dispatches, and it never fails a successful Pages run.
+  - The mirror's `vercel.json` (fork-only) builds a `dist/` of just those five files — docs and workflow files are not served — sends `X-Robots-Tag: noindex`, and caches `data.json` as `max-age=0, s-maxage=300, stale-while-revalidate=600` (edge 5 minutes, browser always revalidates) so no client holds a stale ~1 MB catalog. **The fork's `vercel.json` copy list and `sync-upstream.yml` checkout list must name the same files.**
