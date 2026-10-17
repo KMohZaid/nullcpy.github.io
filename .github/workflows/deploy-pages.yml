@@ -58,16 +58,17 @@ jobs:
         # committed state, which is still unchanged until the fork pulls. Content
         # has to move first, so this is a git nudge rather than a Vercel call.
         # No client_payload needed -- the fork always syncs to upstream main's tip.
-        # Best-effort by design: without FORK_SYNC_TOKEN, or if the fork is
-        # unreachable, the mirror still refreshes on its own 30-minute schedule, so
-        # a nudge failure must never fail a Pages deploy that succeeded.
+        # Best-effort by design: this is the mirror's ONLY automatic trigger (forks
+        # cannot run scheduled workflows, so there is no cron behind it), but a nudge
+        # failure must never fail a Pages deploy that succeeded -- recovery is manual
+        # via the fork's "Sync from Upstream" workflow_dispatch.
         # Covers catalog rebuilds too, because rebuild-catalog.yml dispatches this.
         if: ${{ !cancelled() }}
         env:
           GH_TOKEN: ${{ secrets.FORK_SYNC_TOKEN }}
         run: |
           if [ -z "$GH_TOKEN" ]; then
-            echo "::notice::FORK_SYNC_TOKEN not set; the fork will sync on its own schedule."
+            echo "::notice::FORK_SYNC_TOKEN not set; the fork mirror will not auto-sync -- run its 'Sync from Upstream' workflow manually."
             exit 0
           fi
           for attempt in 1 2 3; do
@@ -78,7 +79,7 @@ jobs:
             echo "Dispatch attempt $attempt failed; retrying..."
             sleep 5
           done
-          echo "::warning::Could not reach the fork mirror after 3 attempts; it still syncs on its own schedule."
+          echo "::warning::Could not reach the fork mirror after 3 attempts; it stays on the previous catalog until synced manually."
 
       - name: Remove older workflow runs
         if: always()
