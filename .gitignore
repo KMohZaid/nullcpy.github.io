@@ -1,1 +1,4 @@
 __pycache__/
+# Vercel: local CLI project link + mirrored build output
+.vercel/
+dist/
