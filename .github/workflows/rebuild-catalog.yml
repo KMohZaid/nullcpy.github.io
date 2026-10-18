@@ -122,6 +122,31 @@ jobs:
           gh workflow run deploy-pages.yml --ref main
           echo "Dispatched deploy-pages workflow."
 
+      - name: Trigger Vercel mirror deployment
+        # The Vercel project is git-connected to this repo, so site-file pushes
+        # auto-deploy unaided. This hook exists for the one case auto-deploy cannot
+        # see: the commit above carries [skip ci], a token Vercel honours, so without
+        # it the mirror would keep serving whatever catalog it was imported with.
+        # Non-fatal: Pages is canonical, and the next site-file push re-syncs the
+        # mirror anyway (that deploy ships the whole repo, data.json included).
+        if: env.CATALOG_PUSHED == '1'
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$VERCEL_DEPLOY_HOOK" ]; then
+            echo "::notice::VERCEL_DEPLOY_HOOK secret not set; skipping Vercel mirror."
+            exit 0
+          fi
+          for attempt in 1 2 3; do
+            if curl -fsS -X POST "$VERCEL_DEPLOY_HOOK"; then
+              echo "Triggered Vercel mirror deployment."
+              exit 0
+            fi
+            echo "Vercel hook attempt $attempt failed; retrying..."
+            sleep 5
+          done
+          echo "::warning::Failed to trigger the Vercel mirror after 3 attempts; it stays on the previous catalog."
+
   trigger_notify_failure:
     needs: [rebuild]
     if: failure()
