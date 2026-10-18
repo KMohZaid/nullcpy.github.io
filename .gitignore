@@ -1,4 +1,6 @@
 __pycache__/
+# Scratch space for local verification harnesses (agent test scripts, dumps)
+.tmp/
 # Vercel: local CLI project link + mirrored build output
 .vercel/
 dist/
