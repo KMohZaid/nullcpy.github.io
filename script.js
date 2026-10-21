@@ -87,7 +87,7 @@ const CONFIG = {
     "telegram": [
       { "label": "Telegram Group", "url": "https://t.me/nullstoretg" },
       { "label": "Telegram Channel", "url": "https://t.me/nullstore_updates" },
-      { "label": "Discord", "url": "https://discord.gg/d4VHpybpQq" }
+      { "label": "Discord Server", "url": "https://discord.gg/d4VHpybpQq" }
     ],
     "theme": [
       { "label": "System", "action": "system" },
