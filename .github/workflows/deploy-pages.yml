@@ -6,6 +6,9 @@ on:
     # Skip pushes that can't change the deployed site:
     # - data.json: catalog rebuilds (dispatched explicitly by rebuild-catalog.yml)
     # - .github/, .gitignore, README/LICENSE/CONFIG: repo maintenance, not site content
+    # - vercel.json / wrangler.jsonc / _headers: mirror build config only. The Pages
+    #   artifact is the staged dist/ of the five site files, so these can never alter
+    #   it -- and each mirror rebuilds from them on its own push trigger anyway.
     paths-ignore:
       - 'data.json'
       - '.github/**'
@@ -13,6 +16,9 @@ on:
       - 'README.md'
       - 'LICENSE'
       - 'CONFIG.md'
+      - 'vercel.json'
+      - 'wrangler.jsonc'
+      - '_headers'
   workflow_call:
   workflow_dispatch:
 
