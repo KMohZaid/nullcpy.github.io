@@ -46,10 +46,20 @@ jobs:
           CF_BEACON_TOKEN: ${{ secrets.CF_BEACON_TOKEN || vars.CF_BEACON_TOKEN }}
         run: node .github/scripts/inject-analytics.mjs
 
+      # Publish only the site itself. upload-pages-artifact has no exclude input,
+      # and _config.yml's `exclude:` list is inert because Jekyll never runs here --
+      # so the published surface is defined solely by what this step stages. Keep it
+      # the same five files the mirrors ship (vercel.json / wrangler.jsonc), minus
+      # _headers, which is Cloudflare-only config.
+      - name: Stage site for publishing
+        run: |
+          mkdir -p dist
+          cp index.html style.css script.js data.json social-preview.svg dist/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: '.'
+          path: 'dist'
 
       - name: Deploy to GitHub Pages (with Retries)
         id: deployment
