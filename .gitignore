@@ -3,4 +3,6 @@ __pycache__/
 .tmp/
 # Vercel: local CLI project link + mirrored build output
 .vercel/
+# Cloudflare: local wrangler state
+.wrangler/
 dist/
