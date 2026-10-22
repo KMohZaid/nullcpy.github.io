@@ -38,6 +38,14 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
+      # Replace the ANALYTICS-BEACON placeholder in the deployed copy with the
+      # real Cloudflare beacon. The token lives only in this repo's secrets/vars,
+      # so forks deploying this workflow ship no analytics block at all.
+      - name: Inject analytics beacon
+        env:
+          CF_BEACON_TOKEN: ${{ secrets.CF_BEACON_TOKEN || vars.CF_BEACON_TOKEN }}
+        run: node .github/scripts/inject-analytics.mjs
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
