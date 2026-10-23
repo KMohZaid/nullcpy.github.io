@@ -2029,7 +2029,7 @@ function createObtainiumInstructions(app, brand) {
 
   const mainPackageId = activeVariant?.packageName || getAppPackageId(app, brand, modalSelectedVariant, modalSelectedSubVariant);
   const mainLabel = getObtainiumAppLabel(app?.appName || "App", brand?.brandName || "Brand", modalSelectedVariant, modalSelectedSubVariant);
-  const mainAdditionalSettings = { apkFilterRegEx: regexPattern };
+  const mainAdditionalSettings = { fallbackToOlderReleases: true, apkFilterRegEx: regexPattern };
   if (modalBuildFilter === "beta") {
     mainAdditionalSettings.includePrereleases = true;
   }
@@ -2059,7 +2059,7 @@ function createObtainiumInstructions(app, brand) {
       const vLabel = getObtainiumAppLabel(app.appName, brand.brandName, v.variant, v.subVariant);
       const vPackageId = v.packageName || getAppPackageId(app, brand, v.variant, v.subVariant);
 
-      const vAdditionalSettings = { apkFilterRegEx: vRegex };
+      const vAdditionalSettings = { fallbackToOlderReleases: true, apkFilterRegEx: vRegex };
       if (modalBuildFilter === "beta") {
         vAdditionalSettings.includePrereleases = true;
       }
