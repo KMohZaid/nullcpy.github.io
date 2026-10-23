@@ -2129,7 +2129,7 @@ function createObtainiumInstructions(app, brand) {
   return `
     <div class="obtainium-instructions">
     <div style="margin-bottom: 12px;">
-      Ensure that you have <strong>Obtainium</strong> installed (available on <a href="${obtainiumLatestUrl}" target="_blank" rel="noopener noreferrer">GitHub</a>). Use the <strong>Add to Obtainium</strong> button for a quick setup if it's available, or follow the steps below to add the app manually:
+      Ensure that you have <strong>Obtainium</strong> installed (available on <a href="${obtainiumLatestUrl}" target="_blank" rel="noopener noreferrer">GitHub</a>).<br><br>Use the <strong class="highlight">Add to Obtainium</strong> button for a quick setup (from step 4) if it's available, or follow the steps below to add the app manually:
     </div>
       <ol>
         <li>Open Obtainium on your device.</li>
