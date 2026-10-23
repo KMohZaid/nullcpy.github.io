@@ -2140,10 +2140,11 @@ function createObtainiumInstructions(app, brand) {
             <button class="copy-btn" onclick="copyToClipboard('${repoUrl}', 'Repository URL copied!')" type="button">Copy</button>
           </div>
         </li>
-        <li>Scroll down to <strong>Filter APKs by regular expression</strong> and enter:
+        <li>Scroll down to <strong>APK selection > Filter APKs/links by regular expression</strong> and enter:
           ${step4Content}
         </li>
         <li>To get beta updates, enable the <strong>Include Pre-releases</strong> toggle.</li>
+        <li>Make sure <strong>Fallback to older releases</strong> is checked, else obtainium will stop by checking last release assests.</li>
         <li>Tap <strong>Add</strong> to begin downloading.</li>
       </ol>
       <div style="margin-top: 12px">
