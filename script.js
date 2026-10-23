@@ -2014,6 +2014,10 @@ function createObtainiumInstructions(app, brand) {
   const repoUrl = `https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
   const obtainiumLatestUrl = "https://github.com/ImranR98/Obtainium/releases/latest";
 
+  const aboutAppForObtainium = "Auto-added using **NullStore**\n" 
+        + `${window.location.protocol}//${window.location.host}/?q=${encodeURIComponent(app?.appName)}\n\n`
+        + "NOTE : Only edit app details in obtainium if you know what you are doing, it can break update tracker";
+
   const rawSlug = app?.appKey || normalizeForSearch(app?.appName || "app");
   const rawBrand = brand?.brandKey || normalizeForSearch(brand?.brandName || "brand");
 
@@ -2029,7 +2033,13 @@ function createObtainiumInstructions(app, brand) {
 
   const mainPackageId = activeVariant?.packageName || getAppPackageId(app, brand, modalSelectedVariant, modalSelectedSubVariant);
   const mainLabel = getObtainiumAppLabel(app?.appName || "App", brand?.brandName || "Brand", modalSelectedVariant, modalSelectedSubVariant);
-  const mainAdditionalSettings = { fallbackToOlderReleases: true, apkFilterRegEx: regexPattern };
+  const mainAdditionalSettings = {
+    fallbackToOlderReleases: true,
+    appName: mainLabel,
+    appAuthor: CONFIG.owner,
+    about: aboutAppForObtainium,
+    apkFilterRegEx: regexPattern
+  };
   if (modalBuildFilter === "beta") {
     mainAdditionalSettings.includePrereleases = true;
   }
@@ -2059,7 +2069,13 @@ function createObtainiumInstructions(app, brand) {
       const vLabel = getObtainiumAppLabel(app.appName, brand.brandName, v.variant, v.subVariant);
       const vPackageId = v.packageName || getAppPackageId(app, brand, v.variant, v.subVariant);
 
-      const vAdditionalSettings = { fallbackToOlderReleases: true, apkFilterRegEx: vRegex };
+      const vAdditionalSettings = { 
+        fallbackToOlderReleases: true,
+        appName: vLabel,
+        appAuthor: CONFIG.owner,
+        about: aboutAppForObtainium,
+        apkFilterRegEx: vRegex 
+      };
       if (modalBuildFilter === "beta") {
         vAdditionalSettings.includePrereleases = true;
       }
